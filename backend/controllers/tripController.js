@@ -122,7 +122,10 @@ exports.getTrip = async (req, res) => {
       });
     }
 
-    res.json(trip);
+    res.json({
+      success: true,
+      trip,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server Error" });
@@ -212,7 +215,7 @@ exports.removeActivity = async (req, res) => {
 exports.regenerateDay = async (req, res) => {
   try {
     const { tripId } = req.params;
-    const { dayNumber, feedbcak } = req.body;
+    const { dayNumber, feedback } = req.body;
     const trip = await Trip.findOne({ _id: tripId, userId: req.user.id });
     if (!trip) {
       return res.status(404).json({ message: "Trip not found" });
@@ -223,7 +226,7 @@ exports.regenerateDay = async (req, res) => {
       budgetTier: trip.budgetTier,
       interests: trip.interests,
       dayNumber,
-      feedbcak,
+      feedback,
     });
 
     const cleanText = rawResponse
@@ -253,8 +256,6 @@ exports.regenerateDay = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
-
-
 
 exports.togglePackingItem = async (req, res) => {
   try {
